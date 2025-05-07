@@ -163,6 +163,18 @@ spm related user-auth-component
 
 ### Publishing
 
+#### `spm pack`
+
+Package the specky component into a zip file.
+
+**Options:**
+- None documented
+
+**Example:**
+```bash
+spm pack
+```
+
 #### `spm login`
 
 Authenticate with the Specky registry.
