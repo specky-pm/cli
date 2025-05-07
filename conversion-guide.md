@@ -36,7 +36,7 @@ Extract metadata from each component specification to create a `spec.json` file:
 
 ```json
 {
-  "name": "@specky/user-management",
+  "name": "@specky-pm/user-management",
   "version": "0.1.0",
   "description": "User management component for the Specky repository",
   "author": {
@@ -46,14 +46,14 @@ Extract metadata from each component specification to create a `spec.json` file:
   "license": "MIT",
   "keywords": ["user", "authentication", "profile"],
   "dependencies": {
-    "@specky/authentication-authorization": "^0.1.0"
+    "@specky-pm/authentication-authorization": "^0.1.0"
   }
 }
 ```
 
 Key points:
 - Use the component name as the package name
-- Use @specky as the component namespace e.g. `@specky/component-name`
+- Use @specky as the component namespace e.g. `@specky-pm/component-name`
 - Start with version 0.1.0 because we're still in development
 - Include relevant keywords
 - Define dependencies on other components
