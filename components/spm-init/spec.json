@@ -22,5 +22,11 @@
   "bugs": {
     "url": "https://github.com/specky-dev/spm-init/issues",
     "email": "bugs@specky.dev"
-  }
+  },
+  "files": [
+    "spec.json",
+    "datamodel.json",
+    "component.md",
+    "tests/**/*.feature"
+  ]
 }

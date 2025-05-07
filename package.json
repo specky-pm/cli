@@ -1,5 +1,5 @@
 {
-  "name": "specky-pm",
+  "name": "@specky-pm/cli",
   "version": "0.1.0",
   "description": "Specky Package Manager - A CLI tool for creating, installing, and managing component specifications",
   "main": "dist/index.js",
