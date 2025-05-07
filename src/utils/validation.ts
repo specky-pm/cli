@@ -32,6 +32,14 @@ export function validateVersion(version: string): { isValid: boolean; message?: 
     return { isValid: false, message: 'Version is required' };
   }
 
+  // Reject versions that start with 'v'
+  if (version.startsWith('v')) {
+    return {
+      isValid: false,
+      message: 'Version should not start with "v"'
+    };
+  }
+
   if (!semver.valid(version)) {
     return {
       isValid: false,
