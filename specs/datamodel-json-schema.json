@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "Specky datamodel.json Schema",
+  "description": "Validation schema for Specky datamodel.json file based on the specification in docs/specky-datamodel-json.md",
+  "type": "object",
+  "properties": {
+    "entities": {
+      "type": "array",
+      "description": "Array of entity definitions",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "attributes"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]+$",
+            "description": "Entity name - must start with uppercase letter and contain only alphanumeric characters"
+          },
+          "attributes": {
+            "type": "array",
+            "description": "Entity attributes",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "type", "description"],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Attribute name",
+                  "pattern": "^[a-zA-Z0-9]+$"
+                },
+                "type": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Attribute type"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Attribute description"
+                },
+                "required": {
+                  "type": "boolean",
+                  "description": "Whether the attribute is required",
+                  "default": false
+                },
+                "unique": {
+                  "type": "boolean",
+                  "description": "Whether the attribute value must be unique",
+                  "default": false
+                },
+                "default": {
+                  "description": "Default value for the attribute"
+                },
+                "validation": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "Validation rules for the attribute",
+                  "properties": {
+                    "minLength": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "Minimum length for string values"
+                    },
+                    "maxLength": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "Maximum length for string values"
+                    },
+                    "pattern": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Regular expression pattern for validation"
+                    },
+                    "email": {
+                      "type": "boolean",
+                      "description": "Whether the value should be a valid email"
+                    },
+                    "telephone": {
+                      "type": "boolean",
+                      "description": "Whether the value should be a valid telephone number"
+                    },
+                    "minimum": {
+                      "type": "number",
+                      "description": "Minimum value for numeric attributes"
+                    },
+                    "maximum": {
+                      "type": "number",
+                      "description": "Maximum value for numeric attributes"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "relationships": {
+            "type": "array",
+            "description": "Entity relationships",
+            "items": {
+              "type": "object",
+              "required": ["name", "type", "target"],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Relationship name"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many"],
+                  "description": "Relationship type"
+                },
+                "target": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9]+$",
+                  "description": "Target entity name"
+                },
+                "inverse": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Name of the inverse relationship"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["entities"],
+  "additionalProperties": false
+}
