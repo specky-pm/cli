@@ -4,7 +4,12 @@ import { registerCommands } from './commands';
 import path from 'path';
 import fs from 'fs-extra';
 
-// Package information - using dynamic import to avoid require
+/**
+ * Package information - using dynamic import to avoid require
+ *
+ * This reads the package.json file to get version information and other metadata
+ * needed for the CLI application.
+ */
 const packageJson = JSON.parse(
   fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8')
 );
@@ -47,6 +52,14 @@ export async function run(): Promise<void> {
 
 /**
  * Handle unhandled promise rejections
+ *
+ * This sets up a global handler for unhandled promise rejections to prevent
+ * the application from crashing silently. It logs the error and exits with
+ * a non-zero status code.
+ *
+ * @example
+ * // This is automatically set up when the CLI is loaded
+ * // Any unhandled rejections will be caught and logged
  */
 process.on('unhandledRejection', (reason, promise) => {
   console.error(chalk.red('Unhandled Rejection at:'), promise);

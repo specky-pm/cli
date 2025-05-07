@@ -22,6 +22,20 @@ import { SpecJson, Author, Repository, Bugs, CommandOptions } from '../types';
 
 /**
  * Register the init command with the CLI
+ *
+ * This function registers the 'init' command with the Commander program.
+ * The init command initializes a new Specky component specification by creating
+ * a spec.json file in the current directory.
+ *
+ * @param program - The Commander program instance
+ *
+ * @example
+ * // In src/commands/index.ts
+ * import { Command } from 'commander';
+ * import { initCommand } from './init';
+ *
+ * const program = new Command();
+ * initCommand(program);
  */
 export function initCommand(program: Command): void {
   program
@@ -107,6 +121,22 @@ export function initCommand(program: Command): void {
 
 /**
  * Prompt the user for spec.json information
+ */
+/**
+ * Prompt the user for spec.json information
+ *
+ * @param defaultAuthor - Default author information from git config
+ * @param defaultRepo - Default repository URL from git config
+ * @returns A promise that resolves to an object containing all user inputs
+ * @throws Error with name 'SIGINT' if the user cancels the prompts
+ *
+ * @example
+ * // Get default values
+ * const defaultAuthor = getDefaultAuthor();
+ * const defaultRepository = getDefaultRepository();
+ *
+ * // Prompt for component information
+ * const answers = await promptForSpecInfo(defaultAuthor, defaultRepository);
  */
 async function promptForSpecInfo(defaultAuthor?: Author, defaultRepo?: string): Promise<any> {
   try {
@@ -316,6 +346,16 @@ async function promptForSpecInfo(defaultAuthor?: Author, defaultRepo?: string): 
 /**
  * Generate spec.json content from user answers
  */
+/**
+ * Generate spec.json content from user answers
+ *
+ * @param answers - The answers object from promptForSpecInfo
+ * @returns A SpecJson object containing the formatted data
+ *
+ * @example
+ * const answers = await promptForSpecInfo(defaultAuthor, defaultRepository);
+ * const specJson = generateSpecJson(answers);
+ */
 function generateSpecJson(answers: any): SpecJson {
   const specJson: SpecJson = {
     name: answers.name,
@@ -387,6 +427,21 @@ function generateSpecJson(answers: any): SpecJson {
 
 /**
  * Validate spec.json against JSON schema
+ */
+/**
+ * Validate spec.json against JSON schema
+ *
+ * @param specJson - The spec.json object to validate
+ * @returns True if the spec.json is valid, false otherwise
+ *
+ * @example
+ * const specJson = generateSpecJson(answers);
+ * const isValid = validateSpecJson(specJson);
+ *
+ * if (!isValid) {
+ *   console.log('Generated spec.json is not valid according to the schema.');
+ *   return;
+ * }
  */
 function validateSpecJson(specJson: SpecJson): boolean {
   try {
