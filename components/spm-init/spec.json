@@ -1,0 +1,26 @@
+{
+  "name": "@specky-pm/spm-init",
+  "version": "0.1.0",
+  "description": "Component for initializing new Specky component specifications",
+  "author": {
+    "name": "Specky Team",
+    "email": "team@specky.dev"
+  },
+  "license": "MIT",
+  "keywords": [
+    "init",
+    "initialization",
+    "component",
+    "specification",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/specky-dev/spm-init.git"
+  },
+  "homepage": "https://specky.dev/components/spm-init",
+  "bugs": {
+    "url": "https://github.com/specky-dev/spm-init/issues",
+    "email": "bugs@specky.dev"
+  }
+}
