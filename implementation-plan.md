@@ -65,10 +65,10 @@ graph TD
 
 ### Phase 2: Core CLI Framework
 
-- [ ] Implement CLI entry point (src/index.ts)
-- [ ] Set up command routing (src/cli.ts)
-- [ ] Create basic command structure
-- [ ] Implement help and version commands
+- [x] Implement CLI entry point (src/index.ts)
+- [x] Set up command routing (src/cli.ts)
+- [x] Create basic command structure
+- [x] Implement help and version commands
 
 ### Phase 3: spm-init Component Implementation
 
