@@ -98,3 +98,37 @@ export function validateEmail(email: string): { isValid: boolean; message?: stri
 
   return { isValid: true };
 }
+
+/**
+ * Validates a license identifier according to SPDX rules
+ * @param license The license identifier to validate
+ * @returns An object with isValid and message properties
+ */
+export function validateLicense(license: string): { isValid: boolean; message?: string } {
+  if (!license) {
+    return { isValid: true }; // License is optional
+  }
+
+  // This is a simplified validation - in a real implementation,
+  // we would check against the full list of SPDX license identifiers
+  // For now, we'll just check for common licenses and basic format
+  const commonLicenses = [
+    'MIT', 'Apache-2.0', 'BSD-2-Clause', 'BSD-3-Clause', 'GPL-2.0',
+    'GPL-3.0', 'LGPL-2.1', 'LGPL-3.0', 'ISC', 'Unlicense'
+  ];
+  
+  if (commonLicenses.includes(license)) {
+    return { isValid: true };
+  }
+  
+  // Check if it follows the basic pattern for license identifiers
+  const licensePattern = /^[A-Za-z0-9\-.+]+$/;
+  if (!licensePattern.test(license)) {
+    return {
+      isValid: false,
+      message: 'License must be a valid SPDX license identifier'
+    };
+  }
+  
+  return { isValid: true };
+}

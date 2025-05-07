@@ -25,13 +25,14 @@
   "author": "Specky Team",
   "license": "MIT",
   "dependencies": {
+    "@specky-pm/spec": "latest",
     "ajv": "^8.12.0",
+    "ajv-formats": "^3.0.1",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "fs-extra": "^11.2.0",
     "inquirer": "^8.2.6",
-    "semver": "^7.5.4",
-    "@specky-pm/spec": "latest"
+    "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",

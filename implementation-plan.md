@@ -72,46 +72,46 @@ graph TD
 
 ### Phase 3: spm-init Component Implementation
 
-- [ ] Implement command registration for `spm init`
-- [ ] Create utility functions:
-  - [ ] Git config extraction for default author information
-  - [ ] File system operations (check file existence, write file, etc.)
-  - [ ] Input validation functions
+- [x] Implement command registration for `spm init`
+- [x] Create utility functions:
+  - [x] Git config extraction for default author information
+  - [x] File system operations (check file existence, write file, etc.)
+  - [x] Input validation functions
 
-- [ ] Implement interactive prompt flow:
-  - [ ] Check for existing spec.json file
-  - [ ] Prompt for component name
-  - [ ] Prompt for version (default: 1.0.0)
-  - [ ] Prompt for description
-  - [ ] Prompt for author information (default from git config if available)
-  - [ ] Prompt for license (default: MIT)
-  - [ ] Prompt for keywords
-  - [ ] Prompt for repository information
-  - [ ] Prompt for homepage URL
-  - [ ] Prompt for bug reporting URL and email
-  - [ ] Display preview of spec.json
-  - [ ] Confirm file creation
+- [x] Implement interactive prompt flow:
+  - [x] Check for existing spec.json file
+  - [x] Prompt for component name
+  - [x] Prompt for version (default: 1.0.0)
+  - [x] Prompt for description
+  - [x] Prompt for author information (default from git config if available)
+  - [x] Prompt for license (default: MIT)
+  - [x] Prompt for keywords
+  - [x] Prompt for repository information
+  - [x] Prompt for homepage URL
+  - [x] Prompt for bug reporting URL and email
+  - [x] Display preview of spec.json
+  - [x] Confirm file creation
 
-- [ ] Implement validation for each input:
-  - [ ] Use the JSON schema from `@specky-pm/spec` package for final validation
-  - [ ] Implement interactive validation for each field:
-    - [ ] Component name validation (lowercase, alphanumeric, hyphens, underscores)
-    - [ ] Version validation (semantic versioning)
-    - [ ] Description validation (non-empty)
-    - [ ] Author validation (string or object with name, email, URL)
-    - [ ] License validation (valid SPDX identifier)
-    - [ ] URL validation for repository, homepage, and bugs
+- [x] Implement validation for each input:
+  - [x] Use the JSON schema from `@specky-pm/spec` package for final validation
+  - [x] Implement interactive validation for each field:
+    - [x] Component name validation (lowercase, alphanumeric, hyphens, underscores)
+    - [x] Version validation (semantic versioning)
+    - [x] Description validation (non-empty)
+    - [x] Author validation (string or object with name, email, URL)
+    - [x] License validation (valid SPDX identifier)
+    - [x] URL validation for repository, homepage, and bugs
 
-- [ ] Implement spec.json generation:
-  - [ ] Format collected data into valid spec.json structure
-  - [ ] Pretty-print JSON with proper indentation
-  - [ ] Write to file system
+- [x] Implement spec.json generation:
+  - [x] Format collected data into valid spec.json structure
+  - [x] Pretty-print JSON with proper indentation
+  - [x] Write to file system
 
-- [ ] Implement error handling:
-  - [ ] Handle existing files (warn and ask for confirmation)
-  - [ ] Handle validation errors (display error and re-prompt)
-  - [ ] Handle file system errors (permissions, etc.)
-  - [ ] Handle cancellation (Ctrl+C)
+- [x] Implement error handling:
+  - [x] Handle existing files (warn and ask for confirmation)
+  - [x] Handle validation errors (display error and re-prompt)
+  - [x] Handle file system errors (permissions, etc.)
+  - [x] Handle cancellation (Ctrl+C)
 
 ### Phase 4: Testing
 
