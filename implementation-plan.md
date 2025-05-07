@@ -50,18 +50,18 @@ graph TD
 
 ### Phase 1: Project Setup
 
-- [ ] Initialize npm project with `package.json`
-- [ ] Configure TypeScript with `tsconfig.json`
-- [ ] Set up project structure (directories)
-- [ ] Install dependencies:
-  - [ ] commander (command-line parsing)
-  - [ ] inquirer (interactive prompts)
-  - [ ] fs-extra (enhanced file system operations)
-  - [ ] chalk (terminal styling)
-  - [ ] semver (semantic version validation)
-  - [ ] @specky-pm/spec (JSON schema for spec.json validation)
-  - [ ] ajv (JSON schema validation library)
-  - [ ] Development dependencies (TypeScript, testing framework, etc.)
+- [x] Initialize npm project with `package.json`
+- [x] Configure TypeScript with `tsconfig.json`
+- [x] Set up project structure (directories)
+- [x] Install dependencies:
+  - [x] commander (command-line parsing)
+  - [x] inquirer (interactive prompts)
+  - [x] fs-extra (enhanced file system operations)
+  - [x] chalk (terminal styling)
+  - [x] semver (semantic version validation)
+  - [x] @specky-pm/spec (JSON schema for spec.json validation)
+  - [x] ajv (JSON schema validation library)
+  - [x] Development dependencies (TypeScript, testing framework, etc.)
 
 ### Phase 2: Core CLI Framework
 
