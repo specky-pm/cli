@@ -163,26 +163,23 @@ Note: we use the `--no-spec` option to exclude the `spec.json` file from the val
 Convert the "Features & Use Cases" sections into Gherkin feature files in the `tests/` directory:
 
 ```gherkin
-Feature: User Registration and Authentication
+Feature: A user publishes a component
 
-  Rule: Users can register using OAuth providers
-  
-    Example: User registers with GitHub
-      Given a user wants to register
-      When they select GitHub as their OAuth provider
-      And they complete the GitHub authentication flow
-      Then a new user account should be created
-      And their GitHub profile information should be imported
-      And they should receive an authentication token
+  Rule: The component package must be stored in the system
 
-  Rule: Users can log in to the system
-  
-    Example: User logs in with valid credentials
-      Given a registered user
-      When they authenticate with their OAuth provider
-      Then they should be logged in
-      And they should receive a valid JWT token
-      And their login activity should be recorded
+    Example: System successfully stores a new component package
+      Given a user has a valid component package
+      When the user uploads the component package
+      Then the system should store the component package in the storage
+      And the system should confirm successful storage
+      And the component should be available for retrieval
+
+  Rule: Component metadata should be stored in the system
+
+    Example: User publishes a new component with valid structure
+      Given a user has created a component with valid and spec.json file
+      When the user uploads the component package
+      Then the metadata from the spec.json should be found in the system
 ```
 
 Organize feature files by user journey or activity:
