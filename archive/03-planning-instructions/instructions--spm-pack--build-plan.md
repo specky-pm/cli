@@ -43,4 +43,6 @@ Your focus should be: `./components/spm-pack`
 
 Please create a document called `implementation-plan--spm-pack.md` which includes:
 - the steps required to implement the new feature in the existing project
-- a step-by-step plan with checkbox notation so we can track our progress e.g. `[ ]` 
+- a step-by-step plan with checkbox notation so we can track our progress e.g. `[ ]`
+- each step should include a task for testing the changes
+- don't forget to add a step for implementing the gherkin feature tests in the `./components/spm-pack/tests` directory
