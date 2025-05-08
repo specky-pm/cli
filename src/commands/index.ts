@@ -8,12 +8,14 @@ import { Command } from "commander";
 import { initCommand } from "./init";
 import { helpCommand } from "./help";
 import { versionCommand } from "./version";
+import { packCommand } from "./pack";
 
 // List of all available commands
 const commands = [
   initCommand,
   helpCommand,
   versionCommand,
+  packCommand,
   // Add new commands here
 ];
 
@@ -27,4 +29,4 @@ export function registerCommands(program: Command): void {
 }
 
 // Export individual commands for direct use
-export { initCommand, helpCommand, versionCommand };
+export { initCommand, helpCommand, versionCommand, packCommand };
