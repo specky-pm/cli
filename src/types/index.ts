@@ -28,7 +28,7 @@ export interface Bugs {
  */
 export interface PublishConfig {
   registry?: string;
-  access?: 'public' | 'restricted';
+  access?: "public" | "restricted";
   tag?: string;
 }
 

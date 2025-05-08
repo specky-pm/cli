@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
-import path from 'path';
+import fs from "fs-extra";
+import path from "path";
 
 /**
  * Check if a file exists at the specified path
@@ -21,10 +21,13 @@ export async function checkFileExists(filePath: string): Promise<boolean> {
  * @param data The data to write
  * @returns A promise that resolves when the file is written
  */
-export async function writeJsonFile(filePath: string, data: any): Promise<void> {
+export async function writeJsonFile(
+  filePath: string,
+  data: any,
+): Promise<void> {
   const jsonString = JSON.stringify(data, null, 2);
   await fs.ensureDir(path.dirname(filePath));
-  await fs.writeFile(filePath, jsonString, 'utf8');
+  await fs.writeFile(filePath, jsonString, "utf8");
 }
 
 /**
@@ -33,7 +36,7 @@ export async function writeJsonFile(filePath: string, data: any): Promise<void> 
  * @returns A promise that resolves to the parsed JSON data
  */
 export async function readJsonFile<T>(filePath: string): Promise<T> {
-  const content = await fs.readFile(filePath, 'utf8');
+  const content = await fs.readFile(filePath, "utf8");
   return JSON.parse(content) as T;
 }
 

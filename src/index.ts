@@ -7,12 +7,12 @@
  * It imports the CLI setup from cli.ts and runs it.
  */
 
-import { run } from './cli';
-import chalk from 'chalk';
+import { run } from "./cli";
+import chalk from "chalk";
 
 // Entry point for the CLI application
 run().catch((error: Error) => {
-  console.error(chalk.red('Error:'), error.message);
+  console.error(chalk.red("Error:"), error.message);
   if (process.env.DEBUG) {
     console.error(error.stack);
   }

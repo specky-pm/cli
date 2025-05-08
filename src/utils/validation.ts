@@ -1,13 +1,16 @@
-import semver from 'semver';
+import semver from "semver";
 
 /**
  * Validates a component name according to the Specky naming rules
  * @param name The component name to validate
  * @returns An object with isValid and message properties
  */
-export function validateComponentName(name: string): { isValid: boolean; message?: string } {
+export function validateComponentName(name: string): {
+  isValid: boolean;
+  message?: string;
+} {
   if (!name) {
-    return { isValid: false, message: 'Component name is required' };
+    return { isValid: false, message: "Component name is required" };
   }
 
   // Pattern: ^(@[a-z0-9-_]+\\/)?[a-z0-9-_]+$
@@ -15,7 +18,8 @@ export function validateComponentName(name: string): { isValid: boolean; message
   if (!namePattern.test(name)) {
     return {
       isValid: false,
-      message: 'Name must be lowercase and can only contain alphanumeric characters, hyphens, and underscores'
+      message:
+        "Name must be lowercase and can only contain alphanumeric characters, hyphens, and underscores",
     };
   }
 
@@ -27,23 +31,26 @@ export function validateComponentName(name: string): { isValid: boolean; message
  * @param version The version string to validate
  * @returns An object with isValid and message properties
  */
-export function validateVersion(version: string): { isValid: boolean; message?: string } {
+export function validateVersion(version: string): {
+  isValid: boolean;
+  message?: string;
+} {
   if (!version) {
-    return { isValid: false, message: 'Version is required' };
+    return { isValid: false, message: "Version is required" };
   }
 
   // Reject versions that start with 'v'
-  if (version.startsWith('v')) {
+  if (version.startsWith("v")) {
     return {
       isValid: false,
-      message: 'Version should not start with "v"'
+      message: 'Version should not start with "v"',
     };
   }
 
   if (!semver.valid(version)) {
     return {
       isValid: false,
-      message: 'Version must follow semantic versioning format (X.Y.Z)'
+      message: "Version must follow semantic versioning format (X.Y.Z)",
     };
   }
 
@@ -55,9 +62,15 @@ export function validateVersion(version: string): { isValid: boolean; message?: 
  * @param description The description to validate
  * @returns An object with isValid and message properties
  */
-export function validateDescription(description: string): { isValid: boolean; message?: string } {
-  if (!description || description.trim() === '') {
-    return { isValid: false, message: 'Description is required and cannot be empty' };
+export function validateDescription(description: string): {
+  isValid: boolean;
+  message?: string;
+} {
+  if (!description || description.trim() === "") {
+    return {
+      isValid: false,
+      message: "Description is required and cannot be empty",
+    };
   }
 
   return { isValid: true };
@@ -68,7 +81,10 @@ export function validateDescription(description: string): { isValid: boolean; me
  * @param url The URL to validate
  * @returns An object with isValid and message properties
  */
-export function validateUrl(url: string): { isValid: boolean; message?: string } {
+export function validateUrl(url: string): {
+  isValid: boolean;
+  message?: string;
+} {
   if (!url) {
     return { isValid: true }; // URLs are optional
   }
@@ -77,7 +93,7 @@ export function validateUrl(url: string): { isValid: boolean; message?: string }
     new URL(url);
     return { isValid: true };
   } catch (error) {
-    return { isValid: false, message: 'URL must be a valid URL' };
+    return { isValid: false, message: "URL must be a valid URL" };
   }
 }
 
@@ -86,14 +102,17 @@ export function validateUrl(url: string): { isValid: boolean; message?: string }
  * @param email The email to validate
  * @returns An object with isValid and message properties
  */
-export function validateEmail(email: string): { isValid: boolean; message?: string } {
+export function validateEmail(email: string): {
+  isValid: boolean;
+  message?: string;
+} {
   if (!email) {
     return { isValid: true }; // Email is optional
   }
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailPattern.test(email)) {
-    return { isValid: false, message: 'Email must be a valid email address' };
+    return { isValid: false, message: "Email must be a valid email address" };
   }
 
   return { isValid: true };
@@ -104,7 +123,10 @@ export function validateEmail(email: string): { isValid: boolean; message?: stri
  * @param license The license identifier to validate
  * @returns An object with isValid and message properties
  */
-export function validateLicense(license: string): { isValid: boolean; message?: string } {
+export function validateLicense(license: string): {
+  isValid: boolean;
+  message?: string;
+} {
   if (!license) {
     return { isValid: true }; // License is optional
   }
@@ -113,22 +135,30 @@ export function validateLicense(license: string): { isValid: boolean; message?: 
   // we would check against the full list of SPDX license identifiers
   // For now, we'll just check for common licenses and basic format
   const commonLicenses = [
-    'MIT', 'Apache-2.0', 'BSD-2-Clause', 'BSD-3-Clause', 'GPL-2.0',
-    'GPL-3.0', 'LGPL-2.1', 'LGPL-3.0', 'ISC', 'Unlicense'
+    "MIT",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "GPL-2.0",
+    "GPL-3.0",
+    "LGPL-2.1",
+    "LGPL-3.0",
+    "ISC",
+    "Unlicense",
   ];
-  
+
   if (commonLicenses.includes(license)) {
     return { isValid: true };
   }
-  
+
   // Check if it follows the basic pattern for license identifiers
   const licensePattern = /^[A-Za-z0-9\-.+]+$/;
   if (!licensePattern.test(license)) {
     return {
       isValid: false,
-      message: 'License must be a valid SPDX license identifier'
+      message: "License must be a valid SPDX license identifier",
     };
   }
-  
+
   return { isValid: true };
 }
