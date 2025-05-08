@@ -11,6 +11,7 @@ import fg from "fast-glob";
 import fs from "fs-extra";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
+import archiver from "archiver";
 import { specJsonSchema } from "@specky-pm/spec";
 import { checkFileExists, readJsonFile } from "../utils/filesystem";
 import { validateComponentName, validateVersion } from "../utils/validation";
@@ -178,6 +179,80 @@ export async function collectFiles(specJson: SpecJson): Promise<string[]> {
 }
 
 /**
+ * Generate a sanitized output filename for the zip archive
+ * @param specJson The validated spec.json content
+ * @returns A string representing the output filename in the format {component-name}-{version}.zip
+ */
+export function generateOutputFilename(specJson: SpecJson): string {
+  // Sanitize component name and version for use in a filename
+  // Replace any characters that are not alphanumeric, dash, or underscore with a dash
+  const sanitizedName = specJson.name.replace(/[^a-zA-Z0-9\-_]/g, "-");
+  const sanitizedVersion = specJson.version.replace(/[^a-zA-Z0-9\-_.]/g, "-");
+  
+  // Return the filename in the format {component-name}-{version}.zip
+  return `${sanitizedName}-${sanitizedVersion}.zip`;
+}
+
+/**
+ * Create a zip archive containing the specified files
+ * @param files Array of file paths to include in the archive
+ * @param specJson The validated spec.json content
+ * @returns A promise that resolves to the path of the created zip file
+ * @throws Error if zip creation fails
+ */
+export async function createZipArchive(files: string[], specJson: SpecJson): Promise<string> {
+  return new Promise((resolve, reject) => {
+    try {
+      const outputFilename = generateOutputFilename(specJson);
+      const outputPath = path.join(process.cwd(), outputFilename);
+      
+      // Create a file to write the zip data to
+      const output = fs.createWriteStream(outputPath);
+      const archive = archiver('zip', {
+        zlib: { level: 9 } // Set the compression level (0-9)
+      });
+      
+      // Listen for all archive data to be written
+      output.on('close', () => {
+        resolve(outputPath);
+      });
+      
+      // Listen for warnings during archiving
+      archive.on('warning', (err) => {
+        if (err.code === 'ENOENT') {
+          console.warn(chalk.yellow(`Warning during zip creation: ${err.message}`));
+        } else {
+          reject(new Error(`Error during zip creation: ${err.message}`));
+        }
+      });
+      
+      // Listen for errors during archiving
+      archive.on('error', (err) => {
+        reject(new Error(`Error creating zip archive: ${err.message}`));
+      });
+      
+      // Pipe archive data to the output file
+      archive.pipe(output);
+      
+      // Add each file to the archive
+      for (const file of files) {
+        const filePath = path.join(process.cwd(), file);
+        archive.file(filePath, { name: file });
+      }
+      
+      // Finalize the archive (write the zip footer)
+      archive.finalize();
+    } catch (error) {
+      if (error instanceof Error) {
+        reject(new Error(`Failed to create zip archive: ${error.message}`));
+      } else {
+        reject(new Error('Failed to create zip archive: Unknown error'));
+      }
+    }
+  });
+}
+
+/**
  * Register the pack command with the CLI
  *
  * This function registers the 'pack' command with the Commander program.
@@ -218,9 +293,24 @@ export function packCommand(program: Command): void {
           files.forEach(file => console.log(chalk.blue(`  - ${file}`)));
         }
         
-        // 3. Create zip archive (to be implemented in future steps)
+        // 3. Create zip archive
+        console.log(chalk.blue("Creating zip archive..."));
+        const zipPath = await createZipArchive(files, specJson);
         
-        console.log(chalk.green("Component packaged successfully!"));
+        // Check if the zip file was created
+        const zipExists = await fs.pathExists(zipPath);
+        if (!zipExists) {
+          throw new Error(`Failed to create zip archive at ${zipPath}`);
+        }
+        
+        // Get the size of the zip file
+        const stats = await fs.stat(zipPath);
+        const fileSizeInBytes = stats.size;
+        const fileSizeInKB = (fileSizeInBytes / 1024).toFixed(2);
+        
+        console.log(chalk.green(`Component packaged successfully!`));
+        console.log(chalk.green(`Archive created at: ${zipPath}`));
+        console.log(chalk.green(`Archive size: ${fileSizeInKB} KB`));
       } catch (error) {
         console.error(
           chalk.red("Error packaging component:"),

@@ -38,6 +38,7 @@
     "@specky-pm/spec": "latest",
     "ajv": "^8.12.0",
     "ajv-formats": "^3.0.1",
+    "archiver": "^7.0.1",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "fast-glob": "^3.3.3",
@@ -46,6 +47,7 @@
     "semver": "^7.5.4"
   },
   "devDependencies": {
+    "@types/archiver": "^6.0.3",
     "@types/fs-extra": "^11.0.4",
     "@types/inquirer": "^8.2.10",
     "@types/jest": "^29.5.11",

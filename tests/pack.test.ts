@@ -15,7 +15,7 @@ jest.mock('fs-extra', () => ({
 jest.mock('fast-glob', () => mockFastGlob);
 
 // Import the module after mocking
-import { collectFiles } from '../src/commands/pack';
+import { collectFiles, generateOutputFilename } from '../src/commands/pack';
 
 describe('Pack Command', () => {
   // Reset mocks before each test
@@ -186,6 +186,30 @@ describe('Pack Command', () => {
       await expect(collectFiles(specJson)).rejects.toThrow(
         "Glob pattern '**/*.nonexistent' did not match any files"
       );
+    });
+  });
+
+  describe('generateOutputFilename', () => {
+    it('should generate a filename in the format {component-name}-{version}.zip', () => {
+      const specJson = {
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component for unit tests'
+      };
+
+      const filename = generateOutputFilename(specJson);
+      expect(filename).toBe('test-component-1.0.0.zip');
+    });
+
+    it('should sanitize component name and version for use in a filename', () => {
+      const specJson = {
+        name: 'test/component@with:invalid*chars',
+        version: '1.0.0+build.123',
+        description: 'Test component for unit tests'
+      };
+
+      const filename = generateOutputFilename(specJson);
+      expect(filename).toBe('test-component-with-invalid-chars-1.0.0-build.123.zip');
     });
   });
 });

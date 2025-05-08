@@ -37,11 +37,11 @@ The `spm pack` command will:
 
 ### 4. Implement Zip Archive Creation
 
-- [ ] Add a function to generate the output filename based on component name and version
-- [ ] Implement logic to create a zip archive
-- [ ] Add all collected files to the zip archive, maintaining directory structure
-- [ ] Save the zip file in the current directory
-- [ ] Handle errors during zip file creation (permissions, disk space, etc.)
+- [x] Add a function to generate the output filename based on component name and version
+- [x] Implement logic to create a zip archive
+- [x] Add all collected files to the zip archive, maintaining directory structure
+- [x] Save the zip file in the current directory
+- [x] Handle errors during zip file creation (permissions, disk space, etc.)
 
 ### 5. Implement User Interface
 
@@ -117,15 +117,15 @@ The `spm pack` command will:
 
 #### Generate Output Filename
 
-- [ ] Create a function to generate the output filename (`{component-name}-{version}.zip`)
-- [ ] Sanitize the component name and version for use in a filename
+- [x] Create a function to generate the output filename (`{component-name}-{version}.zip`)
+- [x] Sanitize the component name and version for use in a filename
 
 #### Create Zip Archive
 
-- [ ] Use a library like `archiver` or `adm-zip` to create the zip file
-- [ ] Add each collected file to the archive, maintaining directory structure
-- [ ] Handle errors during zip creation
-- [ ] Save the zip file to the current directory
+- [x] Use a library like `archiver` or `adm-zip` to create the zip file
+- [x] Add each collected file to the archive, maintaining directory structure
+- [x] Handle errors during zip creation
+- [x] Save the zip file to the current directory
 
 ### 5. Implement User Interface
 

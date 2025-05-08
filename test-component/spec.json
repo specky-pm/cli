@@ -1,1 +1,6 @@
-{"name": "test-component", "version": "1.0.0", "files": ["README.md", "src/**/*.ts"]}
+{
+  "name": "test-component",
+  "version": "1.0.0",
+  "description": "A test component for the Specky Package Manager",
+  "files": ["README.md", "src/**/*.ts"]
+}
