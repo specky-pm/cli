@@ -1,0 +1,82 @@
+{
+  "entities": [
+    {
+      "name": "PackageConfiguration",
+      "attributes": [
+        {
+          "name": "componentName",
+          "type": "string",
+          "description": "Name of the component being packaged",
+          "required": true
+        },
+        {
+          "name": "componentVersion",
+          "type": "string",
+          "description": "Version of the component being packaged",
+          "required": true,
+          "validation": {
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+          }
+        },
+        {
+          "name": "outputFilename",
+          "type": "string",
+          "description": "Name of the output zip file",
+          "required": true
+        },
+        {
+          "name": "outputDirectory",
+          "type": "string",
+          "description": "Directory where the output zip file will be saved",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "PackageFile",
+      "attributes": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Path to the file relative to the component root",
+          "required": true
+        },
+        {
+          "name": "isGlobPattern",
+          "type": "boolean",
+          "description": "Whether the path is a glob pattern",
+          "required": true
+        },
+        {
+          "name": "exists",
+          "type": "boolean",
+          "description": "Whether the file exists",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SpecJson",
+      "attributes": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Component name",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Component version",
+          "required": true
+        },
+        {
+          "name": "files",
+          "type": "string",
+          "description": "Array of files to include in the package (JSON string representation)",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@specky-pm/spm-pack",
+  "version": "0.1.0",
+  "description": "Component for packaging Specky component specifications into distributable zip files",
+  "author": "James Barnes",
+  "license": "MIT",
+  "keywords": [
+    "pack",
+    "packaging",
+    "component",
+    "specification",
+    "cli",
+    "distribution",
+    "zip"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/specky-pm/cli.git"
+  },
+  "homepage": "https://github.com/specky-pm/cli#readme",
+  "bugs": {
+    "url": "https://github.com/specky-pm/cli/issues"
+  },
+  "files": [
+    "spec.json",
+    "component.md",
+    "datamodel.json",
+    "tests/**/*.feature"
+  ]
+}
