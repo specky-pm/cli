@@ -58,6 +58,19 @@ Key points:
 - Include relevant keywords
 - Define dependencies on other components
 
+Use the following when creating the spec.json file:
+```json
+  "author": "James Barnes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/specky-pm/cli.git"
+  },
+  "homepage": "https://github.com/specky-pm/cli#readme",
+  "bugs": {
+    "url": "https://github.com/specky-pm/cli/issues"
+  },
+```
+
 #### Validating spec.json
 
 There is a linter available on the command line that you can use to verify the `spec.json`. For example:

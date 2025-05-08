@@ -2,10 +2,7 @@
   "name": "@specky-pm/spm-init",
   "version": "0.1.0",
   "description": "Component for initializing new Specky component specifications",
-  "author": {
-    "name": "Specky Team",
-    "email": "team@specky.dev"
-  },
+  "author": "James Barnes",
   "license": "MIT",
   "keywords": [
     "init",
@@ -16,12 +13,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/specky-dev/spm-init.git"
+    "url": "https://github.com/specky-pm/cli.git"
   },
-  "homepage": "https://specky.dev/components/spm-init",
+  "homepage": "https://github.com/specky-pm/cli#readme",
   "bugs": {
-    "url": "https://github.com/specky-dev/spm-init/issues",
-    "email": "bugs@specky.dev"
+    "url": "https://github.com/specky-pm/cli/issues"
   },
   "files": [
     "spec.json",
