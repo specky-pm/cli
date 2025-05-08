@@ -1,41 +1,75 @@
 import path from 'path';
 import { jest } from '@jest/globals';
-
-// Create mock functions
-const mockPathExists = jest.fn();
-const mockStat = jest.fn();
-const mockFastGlob = jest.fn();
+import { SpecJson } from '../src/types';
 
 // Mock modules
-jest.mock('fs-extra', () => ({
-  pathExists: mockPathExists,
-  stat: mockStat
+jest.mock('fs-extra');
+jest.mock('fast-glob');
+jest.mock('archiver');
+jest.mock('@specky-pm/spec', () => ({
+  specJsonSchema: {}
 }));
+jest.mock('../src/utils/filesystem');
 
-jest.mock('fast-glob', () => mockFastGlob);
+// Import mocked modules
+import fs from 'fs-extra';
+import fg from 'fast-glob';
+import archiver from 'archiver';
+import * as filesystem from '../src/utils/filesystem';
 
 // Import the module after mocking
-import { collectFiles, generateOutputFilename } from '../src/commands/pack';
+import {
+  collectFiles,
+  generateOutputFilename,
+  checkSpecJsonExists,
+  validateSpecJson,
+  createZipArchive
+} from '../src/commands/pack';
 
 describe('Pack Command', () => {
   // Reset mocks before each test
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(process, 'cwd').mockReturnValue('/test/path');
+    
+    // Setup fs-extra mocks
+    (fs.pathExists as any).mockResolvedValue(true);
+    (fs.stat as any).mockResolvedValue({ isDirectory: () => false });
+    (fs.createWriteStream as any).mockReturnValue({
+      on: jest.fn().mockImplementation(function(this: any, event: any, handler: any) {
+        if (event === 'close') setTimeout(handler, 0);
+        return this;
+      })
+    });
+    (fs.existsSync as any).mockReturnValue(true);
+    (fs.statSync as any).mockReturnValue({ size: 1024 });
+    
+    // Setup fast-glob mock
+    (fg as any).mockResolvedValue([]);
+    
+    // Setup archiver mock
+    (archiver as any).mockReturnValue({
+      pipe: jest.fn().mockReturnThis(),
+      file: jest.fn().mockReturnThis(),
+      finalize: jest.fn().mockReturnThis(),
+      on: jest.fn().mockImplementation(function(this: any, event: any, handler: any) {
+        if (event === 'entry') setTimeout(handler, 0);
+        return this;
+      })
+    });
+    
+    // Setup filesystem utils mocks
+    (filesystem.checkFileExists as any).mockResolvedValue(true);
+    (filesystem.readJsonFile as any).mockResolvedValue({
+      name: 'test-component',
+      version: '1.0.0',
+      description: 'Test component',
+      files: ['README.md', 'src/**/*.ts']
+    });
   });
 
   describe('collectFiles', () => {
     it('should always include spec.json', async () => {
-      // Mock pathExists to return true for all files
-      // @ts-ignore
-      mockPathExists.mockResolvedValue(true);
-      // Mock stat to return a file stat
-      // @ts-ignore
-      mockStat.mockResolvedValue({ isDirectory: () => false });
-      // Mock fast-glob to return empty arrays (no glob matches)
-      // @ts-ignore
-      mockFastGlob.mockResolvedValue([]);
-
       const specJson = {
         name: 'test-component',
         version: '1.0.0',
@@ -49,13 +83,6 @@ describe('Pack Command', () => {
     });
 
     it('should resolve regular file paths', async () => {
-      // Mock pathExists to return true for all files
-      // @ts-ignore
-      mockPathExists.mockResolvedValue(true);
-      // Mock stat to return a file stat
-      // @ts-ignore
-      mockStat.mockResolvedValue({ isDirectory: () => false });
-
       const specJson = {
         name: 'test-component',
         version: '1.0.0',
@@ -73,15 +100,8 @@ describe('Pack Command', () => {
     });
 
     it('should resolve glob patterns', async () => {
-      // Mock pathExists to return true for all files
-      // @ts-ignore
-      mockPathExists.mockResolvedValue(true);
-      // Mock stat to return a file stat
-      // @ts-ignore
-      mockStat.mockResolvedValue({ isDirectory: () => false });
-      // Mock fast-glob to return glob matches
-      // @ts-ignore
-      mockFastGlob.mockImplementation((pattern) => {
+      // Override fast-glob mock for this test
+      (fg as any).mockImplementation((pattern: string) => {
         if (pattern === '**/*.md') {
           return Promise.resolve(['README.md', 'docs/guide.md']);
         }
@@ -104,21 +124,16 @@ describe('Pack Command', () => {
     });
 
     it('should handle directories', async () => {
-      // Mock pathExists to return true for all files
-      // @ts-ignore
-      mockPathExists.mockResolvedValue(true);
-      // Mock stat to return a directory stat for 'docs'
-      // @ts-ignore
-      mockStat.mockImplementation((filePath) => {
+      // Override fs.stat mock for this test
+      (fs.stat as any).mockImplementation((filePath: string) => {
         if (filePath === '/test/path/docs') {
           return Promise.resolve({ isDirectory: () => true });
         }
         return Promise.resolve({ isDirectory: () => false });
       });
-      // Mock fast-glob to return files in the directory
-      // @ts-ignore
-      mockFastGlob.mockImplementation((pattern, options) => {
-        // @ts-ignore
+      
+      // Override fast-glob mock for this test
+      (fg as any).mockImplementation((pattern: string, options: any) => {
         if (pattern === '**/*' && options.cwd === '/test/path/docs') {
           return Promise.resolve(['guide.md', 'api.md']);
         }
@@ -141,17 +156,13 @@ describe('Pack Command', () => {
     });
 
     it('should throw an error for non-existent files', async () => {
-      // Mock pathExists to return false for 'missing.txt'
-      // @ts-ignore
-      mockPathExists.mockImplementation((filePath) => {
+      // Override fs.existsSync mock for this test
+      (fs.existsSync as any).mockImplementation((filePath: string) => {
         if (filePath === '/test/path/missing.txt') {
-          return Promise.resolve(false);
+          return false;
         }
-        return Promise.resolve(true);
+        return true;
       });
-      // Mock stat to return a file stat
-      // @ts-ignore
-      mockStat.mockResolvedValue({ isDirectory: () => false });
 
       const specJson = {
         name: 'test-component',
@@ -166,15 +177,8 @@ describe('Pack Command', () => {
     });
 
     it('should throw an error for glob patterns with no matches', async () => {
-      // Mock pathExists to return true for all files
-      // @ts-ignore
-      mockPathExists.mockResolvedValue(true);
-      // Mock stat to return a file stat
-      // @ts-ignore
-      mockStat.mockResolvedValue({ isDirectory: () => false });
-      // Mock fast-glob to return empty arrays (no glob matches)
-      // @ts-ignore
-      mockFastGlob.mockResolvedValue([]);
+      // Override fast-glob mock for this test
+      (fg as any).mockResolvedValue([]);
 
       const specJson = {
         name: 'test-component',
@@ -210,6 +214,191 @@ describe('Pack Command', () => {
 
       const filename = generateOutputFilename(specJson);
       expect(filename).toBe('test-component-with-invalid-chars-1.0.0-build.123.zip');
+    });
+  });
+
+  describe('checkSpecJsonExists', () => {
+    it('should return true when spec.json exists', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(true);
+      
+      const result = await checkSpecJsonExists();
+      
+      expect(result).toBe(true);
+      expect(filesystem.checkFileExists).toHaveBeenCalledWith('spec.json');
+    });
+
+    it('should return false when spec.json does not exist', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(false);
+      
+      const result = await checkSpecJsonExists();
+      
+      expect(result).toBe(false);
+      expect(filesystem.checkFileExists).toHaveBeenCalledWith('spec.json');
+    });
+  });
+
+  describe('validateSpecJson', () => {
+    beforeEach(() => {
+      // Reset mocks
+      jest.clearAllMocks();
+    });
+
+    it('should throw an error when spec.json does not exist', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(false);
+      
+      await expect(validateSpecJson()).rejects.toThrow('spec.json not found');
+      expect(filesystem.checkFileExists).toHaveBeenCalledWith('spec.json');
+    });
+
+    it('should throw an error when spec.json is missing required fields', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(true);
+      (filesystem.readJsonFile as any).mockResolvedValue({
+        name: 'test-component',
+        // Missing version and description
+      });
+      
+      await expect(validateSpecJson()).rejects.toThrow();
+    });
+
+    it('should throw an error when files field is missing', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(true);
+      (filesystem.readJsonFile as any).mockResolvedValue({
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component'
+        // Missing files field
+      });
+      
+      await expect(validateSpecJson()).rejects.toThrow("Missing 'files' field");
+    });
+
+    it('should throw an error when files field is not an array', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(true);
+      (filesystem.readJsonFile as any).mockResolvedValue({
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component',
+        files: 'not-an-array'
+      });
+      
+      await expect(validateSpecJson()).rejects.toThrow("'files' field must be an array");
+    });
+
+    it('should throw an error when files field is an empty array', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(true);
+      (filesystem.readJsonFile as any).mockResolvedValue({
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component',
+        files: []
+      });
+      
+      await expect(validateSpecJson()).rejects.toThrow("'files' field cannot be empty");
+    });
+
+    it('should throw an error when files field contains non-string entries', async () => {
+      (filesystem.checkFileExists as any).mockResolvedValue(true);
+      (filesystem.readJsonFile as any).mockResolvedValue({
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component',
+        files: ['valid.txt', 123, {}]
+      });
+      
+      await expect(validateSpecJson()).rejects.toThrow("All entries in 'files' must be strings");
+    });
+
+    it('should return the validated spec.json when valid', async () => {
+      const validSpecJson: SpecJson = {
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component',
+        files: ['README.md', 'src/**/*.ts']
+      };
+      
+      (filesystem.checkFileExists as any).mockResolvedValue(true);
+      (filesystem.readJsonFile as any).mockResolvedValue(validSpecJson);
+      
+      const result = await validateSpecJson();
+      
+      expect(result).toEqual(validSpecJson);
+    });
+  });
+
+  describe('createZipArchive', () => {
+    beforeEach(() => {
+      jest.spyOn(process, 'cwd').mockReturnValue('/test/path');
+      process.stdout.write = jest.fn() as any;
+    });
+
+    it('should create a zip archive with the specified files', async () => {
+      const files = ['spec.json', 'README.md', 'src/index.ts'];
+      const specJson: SpecJson = {
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component',
+        files: ['README.md', 'src/**/*.ts']
+      };
+      
+      const result = await createZipArchive(files, specJson);
+      
+      expect(result).toBe('/test/path/test-component-1.0.0.zip');
+    });
+
+    it('should handle errors during zip creation', async () => {
+      // Create a custom archiver mock that simulates an error
+      const errorMock = {
+        pipe: jest.fn().mockReturnThis(),
+        file: jest.fn().mockReturnThis(),
+        finalize: jest.fn(),
+        on: jest.fn().mockImplementation(function(this: any, event: any, handler: any) {
+          if (event === 'error') {
+            // Immediately call the error handler
+            handler(new Error('Archiver error'));
+          }
+          return this;
+        })
+      };
+      
+      (archiver as any).mockReturnValue(errorMock);
+      
+      const files = ['spec.json', 'README.md'];
+      const specJson: SpecJson = {
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component',
+        files: ['README.md']
+      };
+      
+      await expect(createZipArchive(files, specJson)).rejects.toThrow('Error creating zip archive');
+    });
+
+    it('should handle warnings during zip creation', async () => {
+      // Create a custom archiver mock that simulates a warning
+      (archiver as any).mockReturnValue({
+        pipe: jest.fn().mockReturnThis(),
+        file: jest.fn().mockReturnThis(),
+        finalize: jest.fn().mockReturnThis(),
+        on: jest.fn().mockImplementation(function(this: any, event: any, handler: any) {
+          if (event === 'warning') {
+            setTimeout(() => handler({ code: 'ENOENT', message: 'File not found' }), 0);
+          } else if (event === 'close') {
+            setTimeout(() => handler(), 10);
+          }
+          return this;
+        })
+      });
+      
+      const files = ['spec.json', 'README.md'];
+      const specJson: SpecJson = {
+        name: 'test-component',
+        version: '1.0.0',
+        description: 'Test component',
+        files: ['README.md']
+      };
+      
+      const result = await createZipArchive(files, specJson);
+      expect(result).toBe('/test/path/test-component-1.0.0.zip');
     });
   });
 });

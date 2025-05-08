@@ -52,10 +52,10 @@ The `spm pack` command will:
 
 ### 6. Add Tests
 
-- [ ] Create unit tests for validation functions
-- [ ] Create integration tests for the pack command
-- [ ] Add tests for error handling scenarios
-- [ ] Add tests for glob pattern resolution
+- [x] Create unit tests for validation functions
+- [x] Create integration tests for the pack command
+- [x] Add tests for error handling scenarios
+- [x] Add tests for glob pattern resolution
 
 ### 7. Update Documentation
 
@@ -145,15 +145,15 @@ The `spm pack` command will:
 
 #### Unit Tests
 
-- [ ] Create tests for validation functions
-- [ ] Create tests for file collection logic
-- [ ] Create tests for zip archive creation
+- [x] Create tests for validation functions
+- [x] Create tests for file collection logic
+- [x] Create tests for zip archive creation
 
 #### Integration Tests
 
-- [ ] Create tests for the entire pack command
-- [ ] Test with various spec.json configurations
-- [ ] Test error handling scenarios
+- [x] Create tests for the entire pack command
+- [x] Test with various spec.json configurations
+- [x] Test error handling scenarios
 
 ### 7. Update Documentation
 
