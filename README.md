@@ -70,6 +70,34 @@ The `spm init` command will prompt you for the following information:
 
 After collecting this information, the command will show you a preview of the `spec.json` file and ask for confirmation before creating it.
 
+## Command: spm pack
+
+The `spm pack` command creates a distributable package of your Specky component based on the `spec.json` file. It bundles the specified files and directories into a single archive, ready for distribution or installation.
+
+### Usage
+
+```bash
+spm pack [options]
+```
+
+### Options
+
+- `-y, --yes` - Skip prompts and proceed with packaging without confirmation
+
+### Examples
+
+Basic usage with confirmation prompt:
+
+```bash
+spm pack
+```
+
+Quick packaging without confirmation:
+
+```bash
+spm pack --yes
+```
+
 ## The spec.json File
 
 The `spec.json` file is the core of a Specky component. It contains metadata about the component and follows a structure similar to `package.json` but with specific fields for Specky components.
@@ -122,6 +150,39 @@ The `spec.json` file is the core of a Specky component. It contains metadata abo
 - `bugs` - Information for reporting bugs (string or object)
 - `files` - Array of files to include
 - `publishConfig` - Configuration for publishing
+
+### The `files` Field
+
+The `files` field in `spec.json` is an array of strings that specifies which files and directories should be included when the component is packaged using `spm pack`.
+
+Each string in the `files` array can be a file path, a directory path, or a glob pattern.
+
+- **File Paths:** Include a specific file.
+- **Directory Paths:** Include all files within the directory and its subdirectories.
+- **Glob Patterns:** Use glob syntax to specify multiple files or patterns. Common glob patterns include:
+    - `*`: Matches any sequence of non-separator characters.
+    - `**`: Matches any sequence of characters, including separators (used for matching directories recursively).
+    - `?`: Matches any single non-separator character.
+    - `[abc]`: Matches any single character in the set.
+    - `[!abc]`: Matches any single character not in the set.
+
+Example `files` field:
+
+```json
+"files": [
+  "README.md",
+  "component.md",
+  "docs/",
+  "tests/**/*.feature",
+  "!tests/**/*.md"
+]
+```
+
+In this example:
+- `README.md`, `component.md` includes the README and component files.
+- `docs/` includes everything in the `docs` directory.
+- `tests/**/*.features` includes all Gherkin feature spec files in the `tests` directory and its subdirectories.
+- `tests/**/*.md` excludes markdown files from the `tests` directory (patterns starting with `!` exclude matches).
 
 ## Troubleshooting
 

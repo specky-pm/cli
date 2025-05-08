@@ -59,9 +59,9 @@ The `spm pack` command will:
 
 ### 7. Update Documentation
 
-- [ ] Update the README.md with information about the new command
-- [ ] Add examples of how to use the command
-- [ ] Document the expected structure of the spec.json file
+- [x] Update the README.md with information about the new command
+- [x] Add examples of how to use the command
+- [x] Document the expected structure of the spec.json file
 
 ## Detailed Implementation Tasks
 
@@ -159,9 +159,9 @@ The `spm pack` command will:
 
 #### Update README
 
-- [ ] Add information about the `spm pack` command to the README
-- [ ] Include examples of how to use the command
-- [ ] Document the expected structure of the spec.json file
+- [x] Add information about the `spm pack` command to the README
+- [x] Include examples of how to use the command
+- [x] Document the expected structure of the spec.json file
 
 ## Dependencies
 
