@@ -45,10 +45,10 @@ The `spm pack` command will:
 
 ### 5. Implement User Interface
 
-- [ ] Add progress indicators for the packaging process
-- [ ] Implement success message with the path to the created zip file
-- [ ] Add appropriate error messages for various failure scenarios
-- [ ] Implement the `--yes` flag to skip confirmation prompts
+- [x] Add progress indicators for the packaging process
+- [x] Implement success message with the path to the created zip file
+- [x] Add appropriate error messages for various failure scenarios
+- [x] Implement the `--yes` flag to skip confirmation prompts
 
 ### 6. Add Tests
 
@@ -131,15 +131,15 @@ The `spm pack` command will:
 
 #### Add Progress Indicators
 
-- [ ] Display a message when starting the packaging process
-- [ ] Show progress as files are being collected and added to the archive
-- [ ] Display a success message with the path to the created zip file
+- [x] Display a message when starting the packaging process
+- [x] Show progress as files are being collected and added to the archive
+- [x] Display a success message with the path to the created zip file
 
 #### Implement Error Handling
 
-- [ ] Add specific error messages for different failure scenarios
-- [ ] Display helpful information for resolving errors
-- [ ] Ensure non-zero exit codes for failures
+- [x] Add specific error messages for different failure scenarios
+- [x] Display helpful information for resolving errors
+- [x] Ensure non-zero exit codes for failures
 
 ### 6. Add Tests
 

@@ -12,6 +12,7 @@ import fs from "fs-extra";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import archiver from "archiver";
+import inquirer from "inquirer";
 import { specJsonSchema } from "@specky-pm/spec";
 import { checkFileExists, readJsonFile } from "../utils/filesystem";
 import { validateComponentName, validateVersion } from "../utils/validation";
@@ -142,7 +143,7 @@ export async function collectFiles(specJson: SpecJson): Promise<string[]> {
         const relativePath = path.relative(cwd, filePath);
         
         // Check if file exists
-        const exists = await fs.pathExists(filePath);
+        const exists = fs.existsSync(filePath);
         if (!exists) {
           throw new Error(`File '${pattern}' specified in spec.json does not exist`);
         }
@@ -212,6 +213,10 @@ export async function createZipArchive(files: string[], specJson: SpecJson): Pro
         zlib: { level: 9 } // Set the compression level (0-9)
       });
       
+      // Track progress
+      let filesProcessed = 0;
+      const totalFiles = files.length;
+      
       // Listen for all archive data to be written
       output.on('close', () => {
         resolve(outputPath);
@@ -229,6 +234,13 @@ export async function createZipArchive(files: string[], specJson: SpecJson): Pro
       // Listen for errors during archiving
       archive.on('error', (err) => {
         reject(new Error(`Error creating zip archive: ${err.message}`));
+      });
+      
+      // Listen for progress
+      archive.on('entry', () => {
+        filesProcessed++;
+        const percentage = Math.round((filesProcessed / totalFiles) * 100);
+        process.stdout.write(`\r${chalk.blue(`Adding files to archive... ${percentage}% (${filesProcessed}/${totalFiles})`)}`);
       });
       
       // Pipe archive data to the output file
@@ -274,16 +286,20 @@ export function packCommand(program: Command): void {
     .description("Package a component specification into a distributable zip file")
     .option("-y, --yes", "Skip confirmation prompts")
     .action(async (options) => {
-      console.log(
-        chalk.blue("Packaging component specification...")
-      );
+      const fs = require('fs');
 
+      // Debug statement to verify the command is running
+      console.log("DEBUG: Pack command started");
+      console.log("📦 Packaging component specification...");
+      
       try {
         // 1. Validate spec.json
+        console.log(chalk.blue("🔍 Validating spec.json..."));
         const specJson = await validateSpecJson();
         console.log(chalk.green("✓ spec.json validation successful"));
         
         // 2. Collect files
+        console.log(chalk.blue("📂 Collecting files..."));
         const files = await collectFiles(specJson);
         console.log(chalk.green(`✓ Collected ${files.length} files for packaging`));
         
@@ -293,32 +309,90 @@ export function packCommand(program: Command): void {
           files.forEach(file => console.log(chalk.blue(`  - ${file}`)));
         }
         
-        // 3. Create zip archive
-        console.log(chalk.blue("Creating zip archive..."));
+        // 3. Confirm before creating zip archive (unless --yes flag is used)
+        const outputFilename = generateOutputFilename(specJson);
+        const outputPath = path.join(process.cwd(), outputFilename);
+        
+        // Check if file already exists
+        const fileExists = fs.existsSync(outputPath);
+        
+        if (!options.yes) {
+          const confirmMessage = fileExists
+            ? `Archive file ${outputFilename} already exists. Overwrite?`
+            : `Create archive ${outputFilename} with ${files.length} files?`;
+            
+          const { proceed } = await inquirer.prompt([
+            {
+              type: 'confirm',
+              name: 'proceed',
+              message: confirmMessage,
+              default: true
+            }
+          ]);
+          
+          if (!proceed) {
+            console.log(chalk.yellow("Packaging cancelled by user"));
+            process.exit(0);
+          }
+        } else if (fileExists) {
+          console.log(chalk.yellow(`Note: Archive file ${outputFilename} already exists and will be overwritten`));
+        }
+        
+        // 4. Create zip archive
+        console.log(chalk.blue("🔒 Creating zip archive..."));
         const zipPath = await createZipArchive(files, specJson);
+        console.log("\n"); // Add a newline after the progress indicator
         
         // Check if the zip file was created
-        const zipExists = await fs.pathExists(zipPath);
+        const zipExists = fs.existsSync(zipPath);
         if (!zipExists) {
           throw new Error(`Failed to create zip archive at ${zipPath}`);
         }
         
         // Get the size of the zip file
-        const stats = await fs.stat(zipPath);
+        const stats = fs.statSync(zipPath);
         const fileSizeInBytes = stats.size;
         const fileSizeInKB = (fileSizeInBytes / 1024).toFixed(2);
         
-        console.log(chalk.green(`Component packaged successfully!`));
-        console.log(chalk.green(`Archive created at: ${zipPath}`));
-        console.log(chalk.green(`Archive size: ${fileSizeInKB} KB`));
+        // Success message with clear formatting
+        console.log(chalk.green("✅ Component packaged successfully!"));
+        console.log(chalk.green("📁 Archive details:"));
+        console.log(chalk.green(`   - Location: ${zipPath}`));
+        console.log(chalk.green(`   - Size: ${fileSizeInKB} KB`));
+        console.log(chalk.green(`   - Contains: ${files.length} files`));
+        console.log(chalk.green(`   - Component: ${specJson.name}@${specJson.version}`));
+        
+        // Provide next steps hint
+        console.log(chalk.blue("\nYou can now distribute this archive to share your component."));
       } catch (error) {
-        console.error(
-          chalk.red("Error packaging component:"),
-          error instanceof Error ? error.message : String(error)
-        );
+        // Enhanced error handling with more specific messages
+        if (error instanceof Error) {
+          if (error.message.includes("spec.json not found")) {
+            console.error(chalk.red("❌ Error: spec.json not found in the current directory"));
+            console.error(chalk.yellow("Make sure you're in the root directory of your component specification."));
+          } else if (error.message.includes("validation failed")) {
+            console.error(chalk.red("❌ Error: spec.json validation failed"));
+            console.error(chalk.yellow("Please fix the validation errors listed above and try again."));
+          } else if (error.message.includes("did not match any files")) {
+            console.error(chalk.red("❌ Error: Some file patterns did not match any files"));
+            console.error(chalk.yellow("Check the 'files' field in your spec.json and ensure all patterns are correct."));
+          } else if (error.message.includes("does not exist")) {
+            console.error(chalk.red("❌ Error: Some specified files do not exist"));
+            console.error(chalk.yellow("Check the 'files' field in your spec.json and ensure all files exist."));
+          } else if (error.message.includes("zip")) {
+            console.error(chalk.red("❌ Error creating zip archive:"), error.message);
+            console.error(chalk.yellow("Check if you have write permissions in the current directory."));
+          } else {
+            console.error(chalk.red("❌ Error packaging component:"), error.message);
+          }
+        } else {
+          console.error(chalk.red("❌ Unknown error occurred during packaging"));
+        }
+        
         if (process.env.DEBUG) {
           console.error(error);
         }
+        
         process.exit(1);
       }
     });
