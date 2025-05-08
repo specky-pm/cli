@@ -201,7 +201,7 @@ async function promptForSpecInfo(defaultAuthor?: Author, defaultRepo?: string): 
         when: (answers: any) => answers.authorType === 'object',
         default: defaultAuthor?.email,
         validate: (input: string) => {
-          if (!input) return true;
+          if (!input) {return true;}
           const result = validateEmail(input);
           return result.isValid || result.message;
         }
@@ -213,7 +213,7 @@ async function promptForSpecInfo(defaultAuthor?: Author, defaultRepo?: string): 
         when: (answers: any) => answers.authorType === 'object',
         default: defaultAuthor?.url,
         validate: (input: string) => {
-          if (!input) return true;
+          if (!input) {return true;}
           const result = validateUrl(input);
           return result.isValid || result.message;
         }
@@ -280,7 +280,7 @@ async function promptForSpecInfo(defaultAuthor?: Author, defaultRepo?: string): 
         name: 'homepage',
         message: 'Homepage URL (optional):',
         validate: (input: string) => {
-          if (!input) return true;
+          if (!input) {return true;}
           const result = validateUrl(input);
           return result.isValid || result.message;
         }
@@ -322,7 +322,7 @@ async function promptForSpecInfo(defaultAuthor?: Author, defaultRepo?: string): 
         message: 'Bugs email (optional):',
         when: (answers: any) => answers.bugsType === 'object',
         validate: (input: string) => {
-          if (!input) return true;
+          if (!input) {return true;}
           const result = validateEmail(input);
           return result.isValid || result.message;
         }
