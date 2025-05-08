@@ -70,5 +70,8 @@
   "bugs": {
     "url": "https://github.com/specky-pm/cli/issues"
   },
-  "homepage": "https://github.com/specky-pm/cli#readme"
+  "homepage": "https://github.com/specky-pm/cli#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
