@@ -15,7 +15,11 @@ import {
 } from "../utils/validation";
 import { getDefaultAuthor, getDefaultRepository } from "../utils/git";
 import { checkFileExists, writeJsonFile } from "../utils/filesystem";
-import { getDefaultKeywords, getDefaultLicense, getDefaultVersion, } from "../utils/defaults";
+import {
+  getDefaultKeywords,
+  getDefaultLicense,
+  getDefaultVersion,
+} from "../utils/defaults";
 import { Author, Bugs, CommandOptions, SpecJson } from "../types";
 
 /**
