@@ -1,28 +1,22 @@
 import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
-import fs from "fs-extra";
 import path from "path";
-import semver from "semver";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { specJsonSchema } from "@specky-pm/spec";
 import {
   validateComponentName,
-  validateVersion,
   validateDescription,
-  validateUrl,
   validateEmail,
   validateLicense,
+  validateUrl,
+  validateVersion,
 } from "../utils/validation";
 import { getDefaultAuthor, getDefaultRepository } from "../utils/git";
 import { checkFileExists, writeJsonFile } from "../utils/filesystem";
-import {
-  getDefaultVersion,
-  getDefaultLicense,
-  getDefaultKeywords,
-} from "../utils/defaults";
-import { SpecJson, Author, Repository, Bugs, CommandOptions } from "../types";
+import { getDefaultKeywords, getDefaultLicense, getDefaultVersion, } from "../utils/defaults";
+import { Author, Bugs, CommandOptions, SpecJson } from "../types";
 
 /**
  * Register the init command with the CLI

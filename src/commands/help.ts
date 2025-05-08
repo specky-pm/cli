@@ -10,7 +10,7 @@ export function helpCommand(program: Command): void {
   program
     .command("help [command]")
     .description("Display help information for a specific command")
-    .action((commandName) => {
+    .action((commandName: string) => {
       if (commandName) {
         const command = program.commands.find(
           (cmd) =>

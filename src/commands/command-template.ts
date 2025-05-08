@@ -19,7 +19,7 @@ export function commandTemplate(program: Command): void {
     .description("Description of the command")
     .option("-o, --option", "Description of an option")
     .argument("[argument]", "Description of an argument")
-    .action(async (argument, options) => {
+    .action((_argument, _options) => {
       console.log(chalk.blue("Executing command..."));
 
       try {

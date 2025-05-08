@@ -1,6 +1,19 @@
-import path from 'path';
 import { jest } from '@jest/globals';
 import { SpecJson } from '../src/types';
+// Import mocked modules
+import fs from 'fs-extra';
+import fg from 'fast-glob';
+import archiver from 'archiver';
+import * as filesystem from '../src/utils/filesystem';
+
+// Import the module after mocking
+import {
+  checkSpecJsonExists,
+  collectFiles,
+  createZipArchive,
+  generateOutputFilename,
+  validateSpecJson
+} from '../src/commands/pack';
 
 // Mock modules
 jest.mock('fs-extra');
@@ -10,21 +23,6 @@ jest.mock('@specky-pm/spec', () => ({
   specJsonSchema: {}
 }));
 jest.mock('../src/utils/filesystem');
-
-// Import mocked modules
-import fs from 'fs-extra';
-import fg from 'fast-glob';
-import archiver from 'archiver';
-import * as filesystem from '../src/utils/filesystem';
-
-// Import the module after mocking
-import {
-  collectFiles,
-  generateOutputFilename,
-  checkSpecJsonExists,
-  validateSpecJson,
-  createZipArchive
-} from '../src/commands/pack';
 
 describe('Pack Command', () => {
   // Reset mocks before each test

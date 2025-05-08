@@ -1,16 +1,10 @@
-import fs from 'fs-extra';
-import path from 'path';
-import inquirer from 'inquirer';
-import { Command } from 'commander';
-import Ajv from 'ajv';
-import addFormats from 'ajv-formats';
 import {
   validateComponentName,
-  validateVersion,
   validateDescription,
-  validateUrl,
   validateEmail,
-  validateLicense
+  validateLicense,
+  validateUrl,
+  validateVersion
 } from '../src/utils/validation';
 
 // Mock dependencies
@@ -25,10 +19,6 @@ jest.mock('inquirer', () => {
     prompt: jest.fn()
   };
 });
-
-// Import mocked modules
-import * as gitUtils from '../src/utils/git';
-import * as filesystemUtils from '../src/utils/filesystem';
 
 describe('Init Command Edge Cases', () => {
   // This test file focuses on testing edge cases for validation functions

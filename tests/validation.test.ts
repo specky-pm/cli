@@ -1,10 +1,10 @@
 import {
   validateComponentName,
-  validateVersion,
   validateDescription,
-  validateUrl,
   validateEmail,
-  validateLicense
+  validateLicense,
+  validateUrl,
+  validateVersion
 } from '../src/utils/validation';
 
 describe('Validation Utils', () => {

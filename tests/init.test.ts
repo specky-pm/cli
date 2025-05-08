@@ -1,4 +1,4 @@
-import { validateComponentName, validateVersion, validateDescription } from '../src/utils/validation';
+import { validateComponentName, validateDescription, validateVersion } from '../src/utils/validation';
 
 describe('Validation Utils', () => {
   describe('validateComponentName', () => {

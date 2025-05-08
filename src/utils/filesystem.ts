@@ -21,9 +21,9 @@ export async function checkFileExists(filePath: string): Promise<boolean> {
  * @param data The data to write
  * @returns A promise that resolves when the file is written
  */
-export async function writeJsonFile(
+export async function writeJsonFile<T>(
   filePath: string,
-  data: any,
+  data: T,
 ): Promise<void> {
   const jsonString = JSON.stringify(data, null, 2);
   await fs.ensureDir(path.dirname(filePath));

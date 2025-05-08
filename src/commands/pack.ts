@@ -15,7 +15,6 @@ import archiver from "archiver";
 import inquirer from "inquirer";
 import { specJsonSchema } from "@specky-pm/spec";
 import { checkFileExists, readJsonFile } from "../utils/filesystem";
-import { validateComponentName, validateVersion } from "../utils/validation";
 import { SpecJson } from "../types";
 
 /**
@@ -23,7 +22,7 @@ import { SpecJson } from "../types";
  * @returns A promise that resolves to true if spec.json exists, false otherwise
  */
 export async function checkSpecJsonExists(): Promise<boolean> {
-  return await checkFileExists("spec.json");
+  return checkFileExists("spec.json");
 }
 
 /**
@@ -253,7 +252,7 @@ export async function createZipArchive(files: string[], specJson: SpecJson): Pro
       }
       
       // Finalize the archive (write the zip footer)
-      archive.finalize();
+      void archive.finalize();
     } catch (error) {
       if (error instanceof Error) {
         reject(new Error(`Failed to create zip archive: ${error.message}`));
@@ -286,8 +285,6 @@ export function packCommand(program: Command): void {
     .description("Package a component specification into a distributable zip file")
     .option("-y, --yes", "Skip confirmation prompts")
     .action(async (options) => {
-      const fs = require('fs');
-
       // Debug statement to verify the command is running
       console.log("DEBUG: Pack command started");
       console.log("📦 Packaging component specification...");
